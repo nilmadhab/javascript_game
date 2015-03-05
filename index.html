@@ -1,0 +1,594 @@
+<html xmlns="http://www.w3.org/1999/xhtml" style="padding-left: 10px; overflow-x: hidden;"><head>
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<title>reading word</title>
+<style>
+	body{
+		font-family:Tahoma, Geneva, sans-serif;
+		font-size:1.8em;
+	}
+	.form-control{
+		width:173px;
+		
+		height:42px;
+	}
+	.panel-heading{
+		text-align:center;
+	}
+	#align{
+	margin-left:10%;
+	margin-right:10%;		
+	}
+	.btn{
+		
+	}
+	#buttons{
+		margin-top:3%;
+	}
+	.navbar-brand {
+float: left;
+padding: 15px;
+font-size: 38px;
+line-height: 20px;
+height: 50px;
+}
+</style>
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          
+          <a class="navbar-brand" href="#">Hall of Fame</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" role="form">
+            
+            <button type="submit" class="btn btn-success"><a href="index.html" style="color:#FFF">Reset Hall of Fame</a></button>
+            <button type="submit" class="btn bg-danger" onclick="serial_no_proverb()" id="serial_no_proverb">000</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+    <br><br>
+    
+<div class="container">
+
+<div class="row" id="buttons">
+			<div class="col-sm-3">
+            	
+        		<div class="col-sm-8"><input class="form-control" type="text" id="current_player_index" placeholder="Enter player's name">
+                </div>
+                	<div class="col-sm-4"><span onclick="reset_score()" style="cursor:pointer"><img class="img-responsive" src="image.png"></span></div>
+            </div>
+            <div class="col-sm-3" style="margin-left:-43px;">
+                <div class="col-sm-8"> <button class="btn btn-primary btn-lg" onclick="select_sen()">New Challenge</button></div>
+                <div class="col-sm-4"> <button class="btn btn-primary btn-lg" onclick="test()">Clue</button></div>
+            </div>
+            
+            <div class="col-sm-3" style="font-size:0.8em;">
+            	<div class="col-sm-7"><button class="btn btn-primary btn-lg" style="margin-left:-43px;">Remaining Words: <span id="number_of_word_left"></span></button></div>
+				<div class="col-sm-5"><button class="btn btn-primary btn-lg">Round No: <span id="number_of_round">0</span></button></div>
+            </div>
+            <div class="col-sm-3" style="margin-left:43px;">
+            
+            	<button class="btn btn-primary btn-lg" onclick="give_up()">Give up</button>
+        <button class="btn btn-primary btn-lg" onclick="i_m_right()">Thumbs Up!</button>            </div>
+        </div>
+
+        
+  <script>
+    // Check for the various File API support.
+    
+    
+    </script>
+<!--    <div class="panel" style="position:absolute;right:13%;top:17%;">
+    	<h1 style="color:#09F; font-size:2.5em;font-weight:bold;font-family:'Big Noodle Titling',Arial,tahoma">Hall of Honour</h1>
+    </div>-->
+    <div class="row">
+    	
+       <!-- <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Instructions</h3>
+            </div>
+            <div class="panel-body">
+              <p>There are a list of proverbs in this game. Choose any proverb by selecting 1,2,3,4, in the given box. These numbers will select a particular proverb and you have to guess that proverb by its words.</p>
+              <p>These words will come one after the other, when you click the buton &quot;Click to reveal word&quot;.One word will appear at one click. If you want to guess the proverb, you can write in &quot;Guess the correct answer&quot; field. You will be awared marks. You have to guess the proverb in minimum number of clicks.</p>
+            </div>
+      </div>-->
+    </div>
+    <h3 style="color:red; display:none">Number of proverbs in the game is: <span id="num_of_input">113</span>:</h3>
+  <!--<input  class="form-control"type="text" id="select_sen">choose the serial number of proverb</input>-->
+    
+  <!--<button class="btn btn-primary btn-lg" onclick="select_sen()">Get me one/next proverb</button>-->
+        
+  <script>
+            
+            </script>
+    
+  <!--<h3  style="color:red">Word will appear you click button below:</h3>-->
+    <h3 id="demo" style="color:blue"></h3>
+    
+  <p style="display:none">Total number of word is :<span id="sen_len"></span> </p>
+    
+    
+    
+    
+  <script>
+    var input = [];
+/*    input[0] ="అంత్యనిష్ఠూరం కన్నా ఆది నిష్ఠూరం మేలు";
+    input[1] ="అంబలి తాగే వారికి మీసాలు యెగబట్టేవారు కొందరా";
+    input[2] = "అతి రహస్యం బట్టబయలు";
+	input[3] = "అడిగేవాడికి చెప్పేవాడు లోకువ";
+	input[4] = "అత్తలేని కోడలుత్తమురాలు కోడల్లేని అత్త గుణవంతురాలు";
+	input[5] = "అనువు గాని చోట అధికులమనరాదు";
+
+	input = [
+"అంత్యనిష్ఠూరం కన్నా ఆది నిష్ఠూరం మేలు",                        
+"అంబలి తాగే వారికి మీసాలు యెగబట్టేవారు కొందరా",                 
+"అతి రహస్యం బట్టబయలు",                                          
+"అడిగేవాడికి చెప్పేవాడు లోకువ",                                 
+"అత్తలేని కోడలుత్తమురాలు కోడల్లేని అత్త గుణవంతురాలు",           
+"అనువు గాని చోట అధికులమనరాదు",                                  
+"అభ్యాసం కూసు విద్య",                                           
+"అమ్మబోతే అడివి కొనబోతే కొరివి",                                
+"అయితే ఆదివారం కాకుంటే సోమవారం",                                
+"ఆలూ లేదు చూలు లేదు కొడుకు పేరు సోమలింగం",                      
+"ఇంట్లో ఈగల మోత బయట పల్లకీల మోత",                               
+"ఇల్లు కట్టి చూడు పెళ్ళి చేసి చూడు ",                           
+"ఇంట గెలిచి రచ్చ గెలువు",                                       
+"ఇల్లు పీకి పందిరేసినట్టు",                                     
+"ఎనుబోతు మీద వాన కురిసినట్టు",                                  
+"చెవిటి వాని ముందు శంఖమూదినట్టు",                               
+"కందకు లేని దురద కత్తిపీటకెందుకు",                              
+"కత్తిపోటు తప్పినాక కలంపోటు తప్పదు ",                           
+"కుక్క కాటుకు చెప్పుదెబ్బ",                                     
+"కోటి విద్యలు కూటి కొరకే",                                      
+"నీరు పల్లమెరుగు నిజము దేవుడెరుగు",                             
+"పిచ్చుకపై బ్రహ్మాస్త్రం",                                      
+"పిట్ట కొంచెము కూత ఘనము ",                                      
+"రొట్టె విరిగి నేతిలో పడ్డట్టు",                                
+"వాన రాకడ ప్రాణపోకడ",                                           
+"కళ్యాణమొచ్చినా కక్కొచ్చినా ఆగదు",                              
+"మీసాలకు సంపంగి నూనె",                                          
+"ఆ మొద్దు లొదే ఈ పేడు",                                         
+"ఆ తాను ముక్కే !!!",                                            
+"ఆడబోయిన తీర్థము యెదురైనట్లు",                                  
+"ఆడలేక మద్దెల వోడు అన్నట్లు",                                   
+"ఆది లొనే హంస పాదు",                                            
+"ఏమీ లేని యెడారిలో ఆముదము చెట్టే మహా వృక్షము",                  
+"ఆకలి రుచి యెరుగదు, నిద్ర సుఖమెరుగదు",                          
+"తిన్న ఇంటి వాసాలు లెక్కపెట్టినట్లు",                           
+"నెల్లాళ్ళు సావాసం చేస్తే వారు వీరు అవుతారు",                   
+"ఒక ఒరలో రెండు కత్తులు ఇమడవు",                                  
+"ఊపిరి ఉంటే ఉప్పు అమ్ముకొని బ్రతకవచ్చు",                        
+"బతికి ఉంటే బలుసాకు తినవచ్చు ",                                 
+"ఊరంతా చుట్టాలు ఉత్తికట్ట తావు లేదు",                           
+"ఊరు మొహం గోడలు చెపుతాయి",                                      
+"పాకి దానితొ సరసమ్ కంటే అత్తరు సాయిబు తో కలహం మేలు",            
+"పాము కాళ్ళు పామునకెరుక",                                       
+"పానకంలో పుడక",                                                 
+"పాపమని పాత చీర ఇస్తే గోడ చాటుకు వెళ్ళి మూర వేసిందట",           
+"పచ్చ కామెర్లు వచ్చిన వాడికి లోకం అంతా పచ్చగా కనపడినట్లు",      
+"పండిత పుత్రః శుంఠ",                                            
+"పనిలేని మంగలి పిల్లి తల గొరిగినట్లు",                          
+"పరిగెత్తి పాలు తాగే కంటే నిలబడి నీళ్ళు తాగడం మేలు",            
+"పట్టి పట్టి పంగనామం పెడితే గోడ చాటుకు వెళ్ళి చెరిపి వేసుకున్నాడ",
+"పెదిమ దాటితే పృథివి దాటును",                                   
+"పెళ్ళంటే నూరేళ్ళ పంట",                                         
+"పెళ్ళికి వెళుతూ పిల్లిని చంకన పెట్టుకు వెళ్ళినట్టు",           
+"పేనుకు పెత్తనమిస్తే తల అంతా కొరికిందట",                        
+"పెరుగు తోట కూరలో పెరుగు యెంత  ఉందో నీ మాటలో అంతే నిజం ఉంది",   
+"పిచ్చి కోతికి తేలు కుట్టినట్లు",                               
+"పిచ్చోడి చేతిలో రాయిలా",                                       
+"పిల్లి శాపాలకు ఉట్లు తెగుతాయా",                                
+"పిల్లికి చెలగాటం యెలుకకు ప్రాణ సంకటం",                         
+"పిండి కొద్దీ రొట్టె",                                          
+"పిట్ట కొంచెము కూత ఘనము",                                       
+"పోరు నష్టము పొందు లాభము",                                      
+"పోరాని చోట్లకు పోతే రారాని మాటలు రాకపోవు",                     
+"పొర్లించి పొర్లించి కొట్టిన మీసాలకు మన్ను కాలేదన్నదట",         
+"పుణ్యం కొద్దీ పురుషుడు, దానం కొద్దీ బిడ్డలు",                  
+"పువ్వు పుట్టగానే పరిమళించినట్లు",                              
+"రాజు గారి దివాణంలో చాకలోడి పెత్తనము",                          
+"రామాయణంలో పిడకల వేట",                                          
+"రమాయణం అంతా విని రాముడికి సీత యేమౌతుంది అని అడిగినట్టు",       
+"రామేశ్వరం వెళ్ళినా శనేశ్వరం వదలనట్లు",                         
+"రెడ్డి వచ్చే మొదలు పెట్టు అన్నట్టు",                           
+"రొట్టె విరిగి నేతిలో పడ్డట్లు",                                
+"రౌతు కొద్దీ గుర్రము",                                          
+"ఋణ శేషం శత్రు శేషం ఉంచరాదు",                                   
+"చంకలో పిల్లవాడిని ఉంచుకుని ఊరంతా వెతికినట్టు",                 
+"సంతొషమే సగం బలం",                                              
+"సిగ్గు విడిస్తే శ్రీరంగమే",                                    
+"సింగడు అద్దంకి పోనూ పొయ్యాడు రానూ వచ్చాడు",                    
+"శివుని ఆజ్ఞ లేక చీమైనా కుట్టదు",                               
+"శుభం పలకరా యెంకన్నా అంటే పెళ్ళి కూతురు ముండ ఎక్కడ అన్నాడంట!",  
+"శ్వాస ఉండేవరకు ఆశ ఉంటుంది",                                    
+"తాచెడ్డ కోతి వనమెల్ల చెరిచిందట",                               
+"తాడి తన్ను వాని తల తన్నేవాడు ఉంటాడు ",                         
+"తాళిబొట్టు బలం వల్ల తలంబ్రాల వరకు బతికాడు",                    
+"తాను పట్టిన కుందేలుకు మూడే కాళ్ళు",                            
+"తాటాకు చప్పుళ్ళకు కుందేళ్ళు బెదురుతాయా",                       
+"తాతకు దగ్గులు నేర్పినట్టు",                                    
+"తేలుకు పెత్తనమిస్తే తెల్లవార్లూ కుట్టిందట",                    
+"తన కోపమే తన శత్రువు",                                          
+"తన్ను మాలిన ధర్మము మొదలు చెడ్డ బేరము",                         
+"తంతే గారెల బుట్టలో పడ్డట్లు",                                  
+"తప్పులు వెదికే వాడు తండ్రి ఒప్పులు వెదికేవాడు వోర్వలేనివాడు",  
+"తీగ లాగితే డొంక అంతా కదిలినట్లు",                              
+"తెగేదాక లాగవద్దు",                                             
+"తిక్కలోడు తిరణాళ్ళకు వెలితే ఎక్కా దిగా సరిపొయిందంట",           
+"తినే ముందు రుచి అడుగకు వినే ముందు కథ అడుగకు",                  
+"తినగా తినగా గారెలు చేదు",                                      
+"తింటే గారెలు తినాలి వింటే భారతం వినాలి",                       
+"తియ్యటి తేనె నిండిన నోటితోనే తేనెటీగ కుట్టేది",                
+"ఉల్లి చేసిన మేలు తల్లి కూడ చేయదు",                             
+"ఉపకారానికి పోతే అపకారమెదురైనట్లు",                             
+"ఉరుము ఉరుమి మంగళం మీద పడ్డట్టు",                               
+"ఉత్తికెక్కలేనమ్మ స్వర్గానికెక్కినట్టు ",                       
+"వాపును చూసి బలము అనుకున్నాడట",                                 
+"వీపుమీద కొట్టవచ్చు కాని కడుపు మీద కొట్టరాదు",                  
+"వెర్రి వెయ్యి విధాలు",                                         
+"వినాశకాలే విపరీత బుద్ధి",                                      
+"యే ఎండకు ఆ గొడుగు",                                            
+"యే గాలికి ఆ చాప",                                              
+"యెద్దు పుండు కాకికి ముద్దు",                                   
+"యేకులు పెడితే బుట్టలు చిరుగునా",                               
+"యెక్కడైనా బావ కానీ వంగ తోట దగ్గర మాత్రం కాదు",                 
+"యెప్పుడూ ఆడంబరంగా పలికే వాడు అల్పుడు"
+	];
+	
+	*/
+input = [
+"A friend's frown is better than a fool's smile.",
+"A friend in need is a friend indeed.",
+"A friend is easier lost than found.",
+"A friend to everybody is a friend to nobody.",
+"A problem shared is a problem halved.",
+"A true friend is someone who reaches for your hand, but touches your heart.",
+"False friends are worse than open enemies.",
+"Flattery is all right so long as you don't inhale.",
+"Give credit where credit is due.",
+"Grief divided is made lighter.",
+"Memory is the treasure of the mind.",
+"Nothing dries sooner than a tear.",
+"Old friends and old wine are best.",
+"The best of friends must part.",
+"The best things are not bought and sold.",
+"There is no better looking-glass than an old friend.",
+"To err is human (To forgive divine).",
+"Two cannot fall out if one does not choose."
+];
+/*
+	input[0] ="Slow and Steady win";
+    input[1] ="Where there is a will there is a way";
+    input[2] = "Keep your friends close and your enemies closer";
+	input[3] = "Hope for the best, but prepare for the worst";
+	input[4] = "let get together";
+*/
+    var num_of_input = input.length;
+    document.getElementById("num_of_input").innerHTML = num_of_input;
+    var random_index = [];
+	//global variables
+	var user_score = 0;
+    var str="";
+    var res = "";
+    var sen_len =0;
+	var number_of_round = 0;
+	var top_player = ["","","","","","","","","",""];
+	var top_score = [0,0,0,0,0,0,0,0,0,0];
+	var current_player_index = -1;
+	var number_of_word_left = 0;
+	function serial_no_proverb(){
+	}
+  function is_unique(serial_no_proverb){
+    var found=false;
+            for(var i=0;i<random_index.length;i++){
+              if(random_index[i]==serial_no_proverb){found=true;break}
+            }
+            if(found == false){
+            random_index.push(serial_no_proverb);
+            random_index.sort(function(a, b){return a-b});
+            console.log("now array is "+random_index);
+            return 1;
+          }else{
+            return 0;
+          }
+
+  }
+    function select_sen()
+            {
+                //var user_output = document.getElementById("select_sen").value;
+                //console.log("selected sen index" + user_output);
+                   // console.log(str);
+					if(current_player_index == -1){
+						alert("please enter player's name below");
+						}
+						else{
+
+                //document.getElementById("demo").innerHTML =userInput;
+                //nil(userInput);
+				//Math.floor((Math.random()*10)+1)
+					var serial_no_proverb = Math.floor(Math.random()*num_of_input);
+          while(!is_unique(serial_no_proverb)){
+            serial_no_proverb = Math.floor(Math.random()*num_of_input);
+          }
+           
+          console.log("serial_no_proverb is" + serial_no_proverb);
+					document.getElementById("serial_no_proverb").innerHTML =(serial_no_proverb+1);
+                    str=input[serial_no_proverb];
+					res = str.split(" ");
+                    sen_len= res.length;
+					number_of_word_left = sen_len;
+					
+					document.getElementById("demo").innerHTML =" ";
+					number_of_round +=1;
+					///document.getElementById("current_evalution").innerHTML ="0 percent";
+					//document.getElementById("current_progress").style.width=  0 +"%";
+					document.getElementById("number_of_round").innerHTML =number_of_round;
+					test();
+					//document.getElementById("current_evalution").innerHTML ="0 percent";
+					//document.getElementById("current_progress").style.width=  0 +"%";
+						}
+					
+            }
+    
+    
+    
+    function myFunction()
+    {
+    
+    //var n=str.length;
+    //document.getElementById("demo").innerHTML=n;
+    //var str = "How are you doing today?";
+    
+    //document.getElementById("demo").innerHTML=res[0];
+    
+    for(var x=0;x < sen_len; x++){
+        //console.log(res[x]);
+        //document.getElementById("demo").innerHTML+=(" "+res[x]);
+        setInterval(4000);
+    }
+    //console.log(res.length);
+    
+    
+    }
+    function nil(x){
+        var current = x-1;
+        //console.log(res[current]);
+        document.getElementById("demo").innerHTML +=(" "+res[current]);
+        //console.log("value of str from function nil "+str);
+        
+    }
+    </script>
+    
+    
+    
+  <!--<button class="btn btn-primary btn-lg" onclick="test()">Click to reveal word</button>-->
+  <script>
+            function test()
+            {
+				if(sen_len==0){
+					alert("Please select new challenge");
+				}
+				else{
+                //var userInput = document.getElementById("userInput").value;
+                var userInput = document.getElementById("demo").innerHTML.split(" ").length;
+                
+               // console.log("number of word is "+ userInput+" and spilt word is :"+document.getElementById("demo").innerHTML.split(" "));
+                //document.getElementById("demo").innerHTML =userInput;
+				if(userInput<(sen_len+2)){
+					number_of_word_left -=1;
+					document.getElementById("number_of_word_left").innerHTML = number_of_word_left;
+                	nil(userInput-1);
+					}
+					else{
+						alert("word end is reached");
+					}
+				}
+                
+                
+            }
+        </script>
+    
+  <!--<input  class="form-control"type="text" id="userAnswer"=>Guess the correct Answer</input>
+  <button class="btn btn-primary btn-lg" onclick="check()">Submit</button>
+  <p>User Answer: <span id="user_answer"> </span></p>
+  -->
+  <!--<p>No. of Round : <span id="number_of_round"></span></p>-->
+  <!--<p>User evalution : <span id="evalution"> </span></p>-->
+  <script>
+            function check()
+            {
+                var user_output = document.getElementById("userAnswer").value;
+                //document.getElementById("demo").innerHTML =userInput;
+                //nil(userInput);
+                document.getElementById("user_answer").innerHTML = user_output;
+                var ans = user_output.split(" ");
+                //console.log("start cheacking");
+                var count = 0;
+                for(var x=0; x< sen_len; x++){
+                    
+                    var n = res[x].localeCompare(ans[x]);
+                    //console.log(n);
+                    if (n==0){
+                        count ++;
+                    }
+                }
+               // console.log("number of corrct words "+ count);
+    
+                var mark_per_word = 100/sen_len;
+                var total_mark = mark_per_word*count;
+                
+                document.getElementById("evalution").innerHTML = total_mark;
+                
+            }
+        </script>
+        
+        
+        <!--<button class="btn btn-primary btn-lg" onclick="give_up()">Give up</button>
+        <button class="btn btn-primary btn-lg" onclick="i_m_right()">I am right</button>-->
+        
+    	<!--<button class="btn btn-primary btn-lg pull-right" onclick="update_player()">Enter the name of player</button>-->
+        <!--<button class="btn btn-primary btn-lg pull-right" onclick="reset_score()">Reset Score/Next Contestant</button>
+        <input  class="form-control pull-right" type="text" id="current_player_index" placeholder="Enter player's name"></input>-->
+        <script>
+			function give_up(){
+				
+				//if (number_of_round >1){
+				 user_percentage = (user_score/(10*(number_of_round)))*100;
+				//}
+				document.getElementById("evalution").innerHTML = (Math.round(user_percentage) + " percent");
+				document.getElementById("progress").style.width=(Math.round(user_percentage) + "%");
+				top_score[current_player_index] = Math.round(user_percentage);
+				document.getElementById("current_evalution").innerHTML ="0 percent";
+				document.getElementById("current_progress").style.width=  0 +"%";
+				select_sen();
+				
+			}
+			function reset_score(){
+				if (document.getElementById("current_player_index").value==""){
+					alert("please enter a name");
+				}
+				else{
+					
+					if((top_score[current_player_index]!=null)||current_player_index==-1){
+					current_player_index +=1;}
+			 //console.log("current_player_index "+current_player_index);
+			 //var x = current_player_index;
+				top_player[current_player_index]= document.getElementById("current_player_index").value;
+					user_score =0;
+					number_of_round = 0;
+					document.getElementById("number_of_round").innerHTML =number_of_round;
+					document.getElementById("evalution").innerHTML = user_score;
+					document.getElementById("progress").style.width=(0 + "%");
+					//document.getElementById("first").innerHTML = top_player[0] + " " + top_score[0] ;
+					//document.getElementById("second").innerHTML = top_player[1] + " " + top_score[1];
+					//document.getElementById("third").innerHTML = top_player[2] + " " + top_score[2];
+					sort_player();
+					if(current_player_index>9){
+						for(var i =0;i<=9;i++){
+						document.getElementById("player"+i).innerHTML = top_player[i] + " " +"<span class='pull-right'>"+
+						+ top_score[i] + "%"+"</span>";
+
+						}
+
+					}else{
+					for(var i =0;i<=current_player_index;i++){
+						document.getElementById("player"+i).innerHTML = top_player[i] + " " +"<span class='pull-right'>"+
+						+ top_score[i] + "%"+"</span>";
+						}
+					}
+						document.getElementById("demo").innerHTML=" ";
+						sen_len=0;
+				}
+				document.getElementById("current_player_index").value=""//experiment
+				document.getElementById("number_of_word_left").innerHTML="";
+				document.getElementById("current_evalution").innerHTML ="0 percent";
+				document.getElementById("current_progress").style.width=  0 +"%";
+				
+			}
+			function i_m_right(){
+				var count = 0;
+				var user_output="";
+				user_output = document.getElementById("demo").innerHTML;
+				//console.log("output is" + user_output);
+                var ans = user_output.split(" ");//dont know why 2 is coming extra
+				//console.log("after spilting: "+(ans));
+				//console.log("output no of word: "+(ans.length-2));
+				if((ans.length-2)>=1){
+					var mark_per_word = 10/(sen_len-1);
+					var total_mark = mark_per_word*(sen_len-(ans.length-2-1)-1);
+					document.getElementById("current_evalution").innerHTML = (Math.round(total_mark*10) + " percent");
+					document.getElementById("current_progress").style.width=(Math.round(total_mark*10) + "%");
+					user_score +=(Math.round(total_mark*10))/10;
+					var user_percentage = 0;
+					//if (number_of_round >1){
+						//console.log("no of round inside Thumbs up" + number_of_round);
+					 user_percentage = (user_score/(10*(number_of_round)))*100;
+					//}
+					document.getElementById("evalution").innerHTML = (Math.round(user_percentage) + " percent");
+					document.getElementById("progress").style.width=(Math.round(user_percentage) + "%");
+					top_score[current_player_index] = Math.round(user_percentage);
+					
+					select_sen();
+				}
+				else{
+					alert("please at least reveal one word");
+				}
+			}
+		</script>
+        
+        <h4 style="color:#0C3;font-size:1.5em;font-weight:bold"> How am I doing? </h4>
+        
+        <button class="btn btn-danger">Current</button>
+
+        <div class="progress">
+  		<div class="progress-bar progress-bar-warning" role="progressbar" id="current_progress" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        <span id="current_evalution"> </span>
+      </div>
+  </div>
+  <button class="btn btn-success">Overall</button>
+
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" id="progress" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+    <span id="evalution"> </span>
+    </div>
+</div>
+    <!--<input  class="form-control" type="text" id="current_player_index"></input>
+    <button class="btn btn-primary btn-lg" onclick="update_player()">Enter the name of player</button>-->
+    <script>
+	 function update_player(){
+		 current_player_index +=1;
+		 //console.log("current_player_index "+current_player_index);
+		 var x = current_player_index;
+		 top_player[current_player_index]= document.getElementById("current_player_index").value;
+		 //document.getElementById("player"+current_player_index).innerHTML = top_player[current_player_index];
+		 
+		 
+	 }
+	 function sort_player(){
+		 var x = current_player_index;
+		 for(var i=0;i<=x;i++){
+			 for(var j=0;j<i;j++){
+				 if (top_score[j]<top_score[i]){
+					 var tmp = top_score[j];
+					 top_score[j]=top_score[i];
+					 top_score[i]=tmp;
+					 var tmp1 = top_player[j];
+					 top_player[j]=top_player[i];
+					 top_player[i]=tmp1;
+				 }
+			 }
+		 }
+	 }
+	</script>
+<div class="panel panel-success" style="width:65%; margin:0 auto; font-size:2.5em;">
+    	<div class="panel-heading">
+              <h3 class="panel-title" style="font-size:1.5em;"><strong><u>HALL OF FAME </u></strong></h3>
+              
+      </div>
+      <div id="align">
+        <p>1. <span id="player0"></span></p>
+        <p>2. <span id="player1"></span></p>
+        <p>3. <span id="player2"></span></p>
+        <p>4. <span id="player3"></span></p>
+        <p>5. <span id="player4"></span></p>
+        <p>6. <span id="player5"></span></p>
+        <p>7. <span id="player6"></span></p>
+        <p>8. <span id="player7"></span></p>
+        <p>9. <span id="player8"></span></p>
+        <p>10. <span id="player9"></span></p>
+       </div>
+        
+    </div>
+        
+</div>
+
+
+<link id="v9-toolbar-css" rel="stylesheet" href="chrome-extension://ainbkicbloikcngphmjfpjdemblcojdd/css/container.css"><div id="v9-toolbar" class="v9-toolbar v9-init-toolbar"></div></body></html>
